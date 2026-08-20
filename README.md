@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Silent ad blocker that stays invisible to detection scripts.</strong><br/>
-  Blocks ads at the network & DOM level — without being detected as an adblocker.
+  Blocks ads at the network &amp; DOM level — without being detected as an adblocker.
 </p>
 
 <p align="center">
@@ -14,6 +14,10 @@
   <img src="https://img.shields.io/badge/Chrome-120+-brightgreen?style=for-the-badge" alt="Chrome 120+" />
   <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" alt="MIT License" />
   <img src="https://img.shields.io/badge/No%20Tracking-✅-red?style=for-the-badge" alt="No Tracking" />
+</p>
+
+<p align="center">
+  Made by <a href="https://github.com/Irnhakim"><strong>@Irnhakim</strong></a>
 </p>
 
 ---
@@ -53,7 +57,7 @@ GhostBlock is specifically designed to bypass common adblocker detection methods
 
 1. **Clone** this repository:
    ```bash
-   git clone https://github.com/your-username/ghost-block.git
+   git clone https://github.com/Irnhakim/ghost-block.git
    ```
 
 2. Open **Chrome** and navigate to:
@@ -260,7 +264,7 @@ popup.js
 
 ### Setup
 ```bash
-git clone https://github.com/your-username/ghost-block.git
+git clone https://github.com/Irnhakim/ghost-block.git
 cd ghost-block
 # No build step needed — load directly in Chrome
 ```
@@ -299,14 +303,22 @@ GhostBlock is designed with privacy as a priority:
 
 MIT License — see [LICENSE](LICENSE) for details.
 
-## 🙏 Acknowledgments
+## 👤 Author
 
-- Inspired by the need for ad blockers that work on sites with anti-adblock detection
-- Built with Manifest V3 for Chrome's latest extension architecture
-- YouTube bypass strategy: "hide visuals, don't block requests"
+**Irnhakim** — [@Irnhakim](https://github.com/Irnhakim)
+
+## ☕ Support
+
+If GhostBlock saved you from ads, consider supporting:
+
+| Platform | Link |
+|----------|------|
+| Saweria | [saweria.co/irnhakim](https://saweria.co/irnhakim) |
+| Buy Me a Coffee | [buymeacoffee.com/irnhakim](https://buymeacoffee.com/irnhakim) |
 
 ---
 
 <p align="center">
-  <strong>👻 GhostBlock</strong> — <em>Silent. Invisible. Undetectable.</em>
+  <strong>👻 GhostBlock</strong> — <em>Silent. Invisible. Undetectable.</em><br/>
+  <sub>Made with ☕ by <a href="https://github.com/Irnhakim">@Irnhakim</a></sub>
 </p>
