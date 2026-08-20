@@ -54,7 +54,33 @@ div[class*="outbrain"],
 div[class*="sponsored"],
 div[class*="promoted"],
 span[id*="google_ads"],
-ins.adsbygoogle {
+ins.adsbygoogle,
+
+/* TheMoneyTizer banners */
+[id*="85640"],
+[id*="themoneytizer"],
+script[src*="themoneytizer"],
+
+/* LootLabs scripts */
+script[src*="d2ng6x3yyemlxz"],
+script[src*="d2dxy39sqorbhv"],
+
+/* ADCash */
+script[src*="acscdn"],
+#aclib_popunder,
+.aclib-banner,
+
+/* Galaksion */
+script[src*="bowersorgamy"],
+script[src*="lekachmididae"],
+script[src*="barkersceleb"],
+
+/* AdManager */
+script[src*="wpadmngr"],
+
+/* Anti-adblock helpus dialog */
+#helpus,
+.errors[id="helpus"] {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;

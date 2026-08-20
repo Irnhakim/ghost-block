@@ -313,5 +313,104 @@
       "urlFilter": "popcash.net",
       "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
     }
+  },
+  {
+    "id": 40,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "ads.themoneytizer.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 41,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "tds.mediapays.info",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 42,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "d2ng6x3yyemlxz.cloudfront.net",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 43,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "d2dxy39sqorbhv.cloudfront.net",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 44,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "acscdn.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 45,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "bowersorgamy.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 46,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "lekachmididae.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 47,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "barkersceleb.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 48,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "wpadmngr.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 49,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "botradar.tech",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 50,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "mediapays.info",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
   }
 ]

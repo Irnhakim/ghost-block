@@ -97,7 +97,35 @@ const DEFAULT_AD_HOSTS = [
   "juicyads.com",
   "trafficjunky.com",
   "ero-advertising.com",
-  "adskeeper.com"
+  "adskeeper.com",
+
+  // TheMoneyTizer
+  "ads.themoneytizer.com",
+  "themoneytizer.com",
+
+  // Mediapays TDS (popunder/redirect)
+  "tds.mediapays.info",
+  "mediapays.info",
+
+  // LootLabs (CloudFront ad CDN)
+  "d2ng6x3yyemlxz.cloudfront.net",
+  "d2dxy39sqorbhv.cloudfront.net",
+
+  // ADCash
+  "acscdn.com",
+  "acstatic-dsa.com",
+
+  // Galaksion (popunder domains)
+  "bowersorgamy.com",
+  "lekachmididae.com",
+  "barkersceleb.com",
+
+  // AdManager
+  "wpadmngr.com",
+  "js.wpadmngr.com",
+
+  // Bot detection (anti-adblock)
+  "botradar.tech"
 ];
 
 /* ============================================================

@@ -298,7 +298,92 @@
   }
 
   /* ============================================================
-     7. INIT
+     7. ANTI-ADBLOCK BYPASS — site-specific
+     ============================================================ */
+  function patchAntiAdblock() {
+    const hostname = window.location.hostname;
+
+    // --- online-fix.me specific bypasses ---
+    if (hostname.includes("online-fix.me")) {
+      // 1) Block the K3 domain rotator script
+      //    It generates rotating domains for tracking/ads.
+      //    We spoof the K3 object so the script doesn't crash
+      //    but doesn't do anything useful.
+      if (!window.K3) {
+        window.K3 = { U: {} };
+      }
+      if (!window.K3.U) {
+        window.K3.U = {};
+      }
+      // Override K3.U.a to return empty array (no ad domains)
+      window.K3.U.a = function () {
+        return [];
+      };
+      // Override K3.U.b to never call the callback
+      window.K3.U.b = function () {};
+
+      // 2) Hide the anti-adblock "helpus" dialog
+      //    The site checks if ad elements exist and shows #helpus
+      const origGetById = document.getElementById;
+      document.getElementById = function (id) {
+        const el = origGetById.call(this, id);
+        if (id === "helpus" || id === "bottomads") {
+          // Return a fake element that looks like it exists
+          // so the anti-adblock check passes
+          return el || {
+            style: { display: "none" },
+            clientHeight: 100,
+            innerHTML: "",
+            appendChild: function () {},
+            querySelector: function () { return null; },
+            querySelectorAll: function () { return []; }
+          };
+        }
+        return el;
+      };
+
+      // 3) Block the anti-adblock class check
+      //    The site checks: document.getElementsByClassName('7680279de8d0ec434f7ecb3999fff7d3')[0].clientHeight < "20"
+      const origGetByClassName = document.getElementsByClassName;
+      document.getElementsByClassName = function (name) {
+        if (name === "7680279de8d0ec434f7ecb3999fff7d3") {
+          // Return a fake element collection with a fake element
+          // that has a large clientHeight so the check passes
+          return [{
+            clientHeight: 100,
+            style: { display: "block" },
+            innerHTML: "ad-content"
+          }];
+        }
+        return origGetByClassName.call(this, name);
+      };
+
+      // 4) Block localStorage check that disables helpus
+      //    The site checks: !localStorage.getItem("disable-helpus")
+      //    We set it so the check thinks user already dismissed it
+      try {
+        localStorage.setItem("disable-helpus", "true");
+      } catch (_) {}
+
+      // 5) Override document.querySelector to hide ad detection probes
+      const origQSA = document.querySelectorAll;
+      document.querySelectorAll = function (selector) {
+        const result = origQSA.call(this, selector);
+        // If querying for elements that contain ad-related IDs
+        if (typeof selector === "string" && 
+            (selector.includes("85640") || 
+             selector.includes("themoneytizer") ||
+             selector.includes("bottomads") ||
+             selector.includes("helpus"))) {
+          return [];
+        }
+        return result;
+      };
+    }
+  }
+
+  /* ============================================================
+     8. INIT
      ============================================================ */
   function init() {
     // Check if disabled via storage
@@ -310,6 +395,7 @@
     // Apply stealth patches FIRST, before any site script runs
     patchStealthAPIs();
     patchNetworkAPIs();
+    patchAntiAdblock();
 
     // Wait for DOM ready, then clean
     if (document.readyState === "loading") {
