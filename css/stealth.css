@@ -136,7 +136,117 @@ script[src*="desustream.com"],
 /* Tolstoy comments (ad vector) */
 #otakudesu-comments,
 .tolstoycomments-feed,
-script[src*="tolstoycomments"] {
+script[src*="tolstoycomments"],
+
+/* === Facebook Ads === */
+
+/* Sponsored post indicator labels */
+[aria-label="Sponsored"],
+[aria-label="Ditaja"],
+[aria-label="Gesponsert"],
+[aria-label="Sponsorlu"],
+[aria-label="Publicidad"],
+[aria-label="Sponsorisé"],
+[aria-label="Sponsorizzato"],
+[aria-label="Gesponsord"],
+[aria-label="Patrocinado"],
+[aria-label="Pеklama"],
+[aria-label="Реклама"],
+[aria-label="赞助内容"],
+[aria-label="贊助"],
+[aria-label="سپانسر"],
+[aria-label="ponsorowana"],
+[aria-label="Sponsored"],
+
+/* Sponsored post containers (the story wrapper) */
+[role="article"][aria-labelledby*="sponsor"],
+[role="article"] [aria-label="Sponsored"],
+[role="article"] [aria-label="Sponsorlu"],
+[role="article"] [aria-label="Ditaja"],
+
+/* Ad tracking / measurement containers */
+[data-testid="placementTracking"],
+[data-testid*="BoostedComponent"],
+[data-testid*="feed-ads"],
+[data-testid*="adsManager"],
+
+/* Facebook right sidebar ad column */
+._4j5p._4-u5 [role="complementary"],
+._4-u8._4-u9._1rwk,
+._1s7z,
+._2qgu,
+._5u5j,
+._7jz8,
+._99s5,
+._1toh,
+._2d31,
+
+/* Marketplace sponsored items */
+[data-testid="marketplace_feed_item"][data-ad],
+[data-testid*="marketplace-ad"],
+
+/* Stories sponsored ads */
+[data-testid*="stories-tray"] [data-testid*="sponsored"],
+
+/* Video in-stream ads */
+[data-testid*="instream-ad"],
+[data-testid*="video-ad"],
+
+/* Reels sponsored content */
+[data-testid*="reels-ad"],
+
+/* Feed sponsored containers - generic approach */
+[role="feed"] > div > div > div [aria-label="Sponsored"],
+
+/* Ad cards in sidebar widgets */
+._1va1,
+._2b0v,
+._4-u2,
+._703,
+._704,
+._51z2,
+._51z3,
+._51z4,
+._51z5,
+._51z6,
+
+/* Story ads overlay */
+._50vh,
+._50vi,
+._50vj,
+._50vk,
+
+/* Ad labels / badges */
+[style*="color: rgb(145, 145, 145)"][style*="font-size: 12px"],
+._7j9,
+._7j_,
+._7j-w,
+._7kz,
+._4k_b,
+._4k_c,
+._1imp,
+
+/* Suggested for you / People you may know ads */
+[data-testid="profile_growth_hat"],
+[data-testid="fbFeedGeodesicSuggestedEntityCard"],
+
+/* Bottom sticky ad banners */
+._7jy,
+._7jz,
+._1iot,
+._1ioe,
+._1iof,
+._4j5r,
+
+/* Marketplace promoted listings */
+._702,
+._703,
+
+/* Messenger sponsored messages */
+[data-testid="sponsoredMessage"],
+
+/* WhatsApp status ads */
+[data-testid="status-ad"] {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;

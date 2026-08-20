@@ -274,7 +274,7 @@
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ["class", "id", "src", "href", "data-ad-slot"]
+      attributeFilter: ["class", "id", "src", "href", "data-ad-slot", "data-testid", "aria-label", "role"]
     });
   }
 
@@ -476,6 +476,154 @@
         }
         return origSetInterval.call(this, fn, delay);
       };
+    }
+
+    // --- facebook.com / m.facebook.com specific bypasses ---
+    if (hostname.includes("facebook.com")) {
+      // 1) Facebook ad selector map — common patterns for
+      //    sponsored posts in the feed. We run a periodic
+      //    scan since FB is a React SPA that constantly
+      //    re-renders content.
+      const FB_AD_SELECTORS = [
+        // Sponsored label (multi-language)
+        '[aria-label="Sponsored"]',
+        '[aria-label="Sponsorlu"]',
+        '[aria-label="Ditaja"]',
+        '[aria-label="Gesponsert"]',
+        '[aria-label="Sponsorisé"]',
+        '[aria-label="Publicidad"]',
+        '[aria-label="Sponsorizzato"]',
+        '[aria-label="Gesponsord"]',
+        '[aria-label="Patrocinado"]',
+        '[aria-label="Pеklama"]',
+        '[aria-label="Реклама"]',
+        '[aria-label="赞助内容"]',
+        '[aria-label="贊助"]',
+        '[aria-label="سپانسر"]',
+        '[aria-label="ponsorowana"]',
+        // Ad tracking containers
+        '[data-testid="placementTracking"]',
+        '[data-testid*="BoostedComponent"]',
+        '[data-testid*="feed-ads"]',
+        '[data-testid*="adsManager"]',
+        '[data-testid*="instream-ad"]',
+        '[data-testid*="video-ad"]',
+        '[data-testid*="reels-ad"]',
+        '[data-testid*="marketplace-ad"]',
+        '[data-testid="sponsoredMessage"]',
+        '[data-testid="profile_growth_hat"]',
+        // Facebook internal class-based selectors
+        '._7jy', '._7jz', '._1iot', '._1ioe', '._1iof',
+        '._1va1', '._2b0v', '._4-u2', '._51z2',
+        '._50vh', '._50vi', '._50vj', '._50vk',
+        '._7j9', '._7j_', '._7j-w', '._7kz',
+        '._4k_b', '._4k_c', '._1imp', '._4j5r',
+        '._702', '._703', '._1s7z'
+      ];
+
+      // 2) Find the sponsored label, then walk up to the
+      //    story container and remove the whole ad post.
+      function removeFbAds() {
+        if (!enabled) return;
+
+        for (const sel of FB_AD_SELECTORS) {
+          try {
+            const els = document.querySelectorAll(sel);
+            els.forEach((label) => {
+              // Walk up to find the story/article container
+              let story = label;
+              for (let i = 0; i < 15; i++) {
+                if (!story.parentElement) break;
+                story = story.parentElement;
+                // Facebook wraps feed items in role="article"
+                // or in divs with specific data-testid
+                const testId = story.getAttribute("data-testid") || "";
+                const role = story.getAttribute("role") || "";
+                if (
+                  role === "article" ||
+                  testId.includes("fbfeed_story") ||
+                  testId.includes("FeedUnit") ||
+                  story.querySelector('[aria-label="See more"]')
+                ) {
+                  markAndRemove(story);
+                  break;
+                }
+              }
+            });
+          } catch (_) {}
+        }
+
+        // Also hide the right sidebar ad column
+        const sidebar = document.querySelector(
+          '[role="complementary"], [role="complementary"] [data-testid], ._4j5p._4-u5'
+        );
+        if (sidebar && !sidebar.__GB_AD__) {
+          // Only hide if it contains ad-like content
+          const hasAd = sidebar.querySelector(
+            '[aria-label="Sponsored"], [aria-label="Sponsorlu"], [data-testid*="adsManager"]'
+          );
+          if (hasAd) {
+            markAndRemove(sidebar);
+          }
+        }
+      }
+
+      // 3) Intercept Facebook's ad insertion by patching
+      //    the DOM insertion methods used by React/FB framework
+      const origInsertBefore = Node.prototype.insertBefore;
+      Node.prototype.insertBefore = function (newNode, refNode) {
+        if (enabled && newNode && newNode.nodeType === 1) {
+          // Check if the new node contains sponsored content
+          try {
+            const sponsored = newNode.querySelector(
+              '[aria-label="Sponsored"], [aria-label="Sponsorlu"], ' +
+              '[data-testid="placementTracking"], [data-testid*="BoostedComponent"]'
+            );
+            if (sponsored) {
+              newNode.__GB_AD__ = true;
+              newNode.style.setProperty("display", "none", "important");
+              setTimeout(() => {
+                try { newNode.remove(); } catch (_) {}
+              }, 50);
+              return refNode;
+            }
+          } catch (_) {}
+        }
+        return origInsertBefore.call(this, newNode, refNode);
+      };
+
+      const origAppendChild = Node.prototype.appendChild;
+      Node.prototype.appendChild = function (child) {
+        if (enabled && child && child.nodeType === 1) {
+          try {
+            const sponsored = child.querySelector(
+              '[aria-label="Sponsored"], [aria-label="Sponsorlu"], ' +
+              '[data-testid="placementTracking"], [data-testid*="BoostedComponent"]'
+            );
+            if (sponsored) {
+              child.__GB_AD__ = true;
+              child.style.setProperty("display", "none", "important");
+              setTimeout(() => {
+                try { child.remove(); } catch (_) {}
+              }, 50);
+              return child;
+            }
+          } catch (_) {}
+        }
+        return origAppendChild.call(this, child);
+      };
+
+      // 4) Run ad removal periodically (FB is React SPA,
+      //    content loads dynamically)
+      setInterval(removeFbAds, 1000);
+      setInterval(removeFbAds, 3000);
+
+      // 5) Also remove on scroll (new feed items load)
+      let scrollTimeout;
+      window.addEventListener("scroll", () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(removeFbAds, 200);
+      }, { passive: true });
     }
   }
 

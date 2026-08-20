@@ -133,7 +133,17 @@ const DEFAULT_AD_HOSTS = [
   "rebrand.ly",
 
   // Tolstoy Comments (used as ad vector)
-  "web.tolstoycomments.com"
+  "web.tolstoycomments.com",
+
+  // Facebook ad tracking & measurement
+  "pixel.facebook.com",
+  "analytics.facebook.com",
+  "www.facebook.com/tr/",
+  "www.facebook.com/odi/",
+  "www.facebook.com/aab",
+  "tr-ads.facebook.com",
+  "facebook.com/advanced_measurement",
+  "an.facebook.com"
 ];
 
 /* ============================================================
