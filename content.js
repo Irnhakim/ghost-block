@@ -183,9 +183,31 @@
       return false;
     }
 
-    // Quick host check
-    for (const host of R.adHosts) {
-      if (lower.includes(host)) return true;
+    // Extract hostname securely
+    let hostname = "";
+    try {
+      if (lower.startsWith("//")) {
+        hostname = new URL("http:" + lower).hostname;
+      } else if (lower.startsWith("http://") || lower.startsWith("https://")) {
+        hostname = new URL(lower).hostname;
+      } else if (lower.startsWith("data:") || lower.startsWith("about:") || lower.startsWith("blob:")) {
+        return false;
+      } else {
+        hostname = new URL("http://" + lower).hostname;
+      }
+    } catch (_) {
+      for (const host of R.adHosts) {
+        if (lower.startsWith(host) || lower.includes("/" + host) || lower.includes("." + host)) return true;
+      }
+      return false;
+    }
+
+    // Precise host check: checks domain & subdomains (ads.example.com -> example.com)
+    let parts = hostname.split(".");
+    while (parts.length >= 2) {
+      const cur = parts.join(".");
+      if (R.adHosts.has(cur)) return true;
+      parts.shift();
     }
 
     // Script pattern check
