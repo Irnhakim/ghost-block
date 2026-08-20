@@ -197,8 +197,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "AD_BLOCKED":
-      blockedStats.total += 1;
-      blockedStats.today += 1;
+      const count = msg.count || 1;
+      blockedStats.total += count;
+      blockedStats.today += count;
       chrome.storage.local.set({ blockedStats });
       break;
 

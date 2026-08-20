@@ -251,8 +251,10 @@
 
     removeCount++;
     if (removeCount % 5 === 0) {
+      // MAIN world doesn't have chrome.runtime!
+      // Use postMessage → bridge.js (ISOLATED) will forward to background
       try {
-        chrome.runtime.sendMessage({ type: "AD_BLOCKED" });
+        window.postMessage({ type: "__GB_ADBLOCKED__" }, "*");
       } catch (_) {}
     }
   }

@@ -13,11 +13,29 @@ chrome.storage.onChanged.addListener((changes) => {
 });
 
 // Listen for messages from MAIN world
+// Batch AD_BLOCKED messages to avoid flooding background
+let pendingBlocked = 0;
+let flushTimer = null;
+
+function flushBlocked() {
+  if (pendingBlocked > 0) {
+    try {
+      chrome.runtime.sendMessage({
+        type: "AD_BLOCKED",
+        count: pendingBlocked
+      });
+    } catch (_) {}
+    pendingBlocked = 0;
+  }
+  flushTimer = null;
+}
+
 window.addEventListener("message", (event) => {
   if (event.source !== window) return;
   if (event.data && event.data.type === "__GB_ADBLOCKED__") {
-    try {
-      chrome.runtime.sendMessage({ type: "AD_BLOCKED" });
-    } catch (_) {}
+    pendingBlocked += 1;
+    if (!flushTimer) {
+      flushTimer = setTimeout(flushBlocked, 200);
+    }
   }
 });
