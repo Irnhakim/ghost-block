@@ -246,12 +246,65 @@ script[src*="tolstoycomments"],
 [data-testid="sponsoredMessage"],
 
 /* WhatsApp status ads */
-[data-testid="status-ad"] {
+[data-testid="status-ad"],
+
+/* === YouTube Ads (visual hide only — don't remove!) ===
+   YouTube detects if ad elements are REMOVED from DOM.
+   We just hide them visually so detection passes. */
+
+/* Ad player overlay containers */
+.ytp-ad-player-overlay,
+.ytp-ad-text,
+.ytp-ad-text-overlay,
+.ytp-ad-image-overlay,
+.ytp-ad-image-overlay-link,
+.ytp-ad-overlay-link,
+.ytp-ad-overlay-container,
+.ytp-ad-progress,
+.ytp-ad-progress-bar,
+.ytp-ad-display-overlay,
+.ytp-ad-skip-button,
+.ytp-ad-skip-button-modern,
+.ytp-ad-skip-button-slot,
+.ytp-ad-overlay-close-button,
+.video-ads,
+.ad-container,
+
+/* Sidebar ad units */
+ytd-display-ad-renderer,
+ytd-promoted-sparkles-web-renderer,
+ytd-promoted-video-renderer,
+ytd-ad-slot-renderer,
+ytd-statement-banner-renderer-ad,
+ytd-in-feed-ad-layout-renderer,
+
+/* Bottom ad banner */
+ytd-ad-slot-renderer,
+
+/* Ad blocker warning popup — HIDE THIS */
+ytd-enforcement-message-view-model,
+ytd-popup-container:has(ytd-enforcement-message-view-model),
+tp-yt-paper-dialog:has(ytd-enforcement-message-view-model),
+
+/* Player ads section */
+#player-ads {
+  /* Don't use display:none — YouTube detects it!
+     Use visual hiding instead. */
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+/* Override: the warning popup CAN be display:none
+   because it's not part of the ad detection check */
+ytd-enforcement-message-view-model,
+ytd-popup-container:has(ytd-enforcement-message-view-model),
+tp-yt-paper-dialog:has(ytd-enforcement-message-view-model) {
   display: none !important;
   visibility: hidden !important;
-  height: 0 !important;
-  max-height: 0 !important;
-  overflow: hidden !important;
-  pointer-events: none !important;
-  opacity: 0 !important;
 }

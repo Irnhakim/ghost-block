@@ -167,6 +167,16 @@
     if (!url) return false;
     const lower = url.toLowerCase();
 
+    // IMPORTANT: Never block YouTube ad network requests!
+    // YouTube detects if ad requests are blocked and shows
+    // the "adblocker not allowed" popup. Instead, we let
+    // ads load but hide them visually + fake detection signals.
+    if (lower.includes("youtube.com") || lower.includes("youtu.be") ||
+        lower.includes("googlevideo.com") || lower.includes("ytimg.com") ||
+        lower.includes("google.com/youtube")) {
+      return false;
+    }
+
     // Quick host check
     for (const host of R.adHosts) {
       if (lower.includes(host)) return true;
@@ -476,6 +486,199 @@
         }
         return origSetInterval.call(this, fn, delay);
       };
+    }
+
+    // --- youtube.com / m.youtube.com specific bypasses ---
+    if (hostname.includes("youtube.com")) {
+      // YouTube's adblocker detection checks:
+      // 1. Whether ad-related network requests were blocked
+      // 2. Whether ad DOM containers are visible
+      // 3. Whether video ad playback was interrupted
+      // 4. Whether ytInitialPlayerResponse contains ad data
+      //
+      // Strategy: Let ads LOAD (don't block network),
+      // but HIDE them visually + fake detection signals.
+
+      // 1) Remove the adblocker warning popup
+      const removeYTAdPopup = () => {
+        // The popup is a ytd-enforcement-message-view-model
+        const popupSelectors = [
+          'ytd-enforcement-message-view-model',
+          'ytd-popup-container:has(ytd-enforcement-message-view-model)',
+          '#consent-bump',
+          'tp-yt-paper-dialog:has(ytd-enforcement-message-view-model)',
+          '[id*="enforcement-message"]',
+          '.ytp-ad-overlay-container',
+          '.ytp-ad-text-overlay',
+          '.ytp-ad-image-overlay'
+        ];
+        for (const sel of popupSelectors) {
+          try {
+            document.querySelectorAll(sel).forEach((el) => {
+              el.__GB_AD__ = true;
+              el.style.setProperty("display", "none", "important");
+              el.style.setProperty("visibility", "hidden", "important");
+              setTimeout(() => {
+                try { el.remove(); } catch (_) {}
+              }, 50);
+            });
+          } catch (_) {}
+        }
+      };
+
+      // 2) Fake ad container presence so YouTube thinks
+      //    ads are playing normally.
+      const fakeYTAdContainers = () => {
+        // YouTube checks for .ad-showing class on the player
+        // to determine if an ad is playing. If we remove it,
+      //    YouTube thinks ads are blocked.
+        // Instead, we keep it but hide the ad visuals.
+
+        // Hide ad video elements but keep the container
+        const adVideoSelectors = [
+          '.video-ads',
+          '.ad-container',
+          '.ytp-ad-player-overlay',
+          '.ytp-ad-text',
+          '.ytp-ad-skip-button',
+          '.ytp-ad-skip-button-modern',
+          '.ytp-ad-skip-button-slot',
+          '.ytp-ad-overlay-link',
+          '.ytp-ad-image-overlay-link',
+          '.ytp-ad-overlay-close-button',
+          '.ytp-ad-overlay-container iframe',
+          '.ytp-ad-progress',
+          '.ytp-ad-progress-bar',
+          '.ytp-ad-display-overlay',
+          '.ytp-ad-text-overlay',
+          '.ytp-ad-image-overlay',
+          'div.ytp-ad-overlay-container',
+          'div.video-ads > div'
+        ];
+
+        for (const sel of adVideoSelectors) {
+          try {
+            document.querySelectorAll(sel).forEach((el) => {
+              // Don't mark as __GB_AD__ — we just want to
+              // hide visually, not remove (detection needs them)
+              el.style.setProperty("opacity", "0", "important");
+              el.style.setProperty("pointer-events", "none", "important");
+              el.style.setProperty("z-index", "-9999", "important");
+              el.style.setProperty("position", "absolute", "important");
+              el.style.setProperty("left", "-9999px", "important");
+              el.style.setProperty("top", "-9999px", "important");
+              el.style.setProperty("width", "1px", "important");
+              el.style.setProperty("height", "1px", "important");
+            });
+          } catch (_) {}
+        }
+      };
+
+      // 3) Hide sidebar ad slots
+      const hideYTSidebarAds = () => {
+        const sidebarAds = [
+          'ytd-display-ad-renderer',
+          'ytd-promoted-sparkles-web-renderer',
+          'ytd-promoted-video-renderer',
+          'ytd-ad-slot-renderer',
+          'ytd-statement-banner-renderer-ad',
+          'ytd-in-feed-ad-layout-renderer',
+          '#player-ads',
+          '#related > ytd-item-section-renderer:first-child ytd-rich-item-renderer:has(ytd-display-ad-renderer)',
+          'ytd-ad-slot-renderer'
+        ];
+        for (const sel of sidebarAds) {
+          try {
+            document.querySelectorAll(sel).forEach((el) => {
+              markAndRemove(el);
+            });
+          } catch (_) {}
+        }
+      };
+
+      // 4) Block the adblocker detection by spoofing
+      //    the signals YouTube checks.
+      const patchYTDetection = () => {
+        // YouTube checks window.yt.config_ for ad blocking signals
+        try {
+          if (window.yt && window.yt.config_) {
+            // Remove ad-blocked flag if set
+            delete window.yt.config_.adsBlocked;
+            delete window.yt.config_['COLLABIATOR'];
+          }
+          if (window.ytcfg) {
+            const get = window.ytcfg.get;
+            if (get) {
+              window.ytcfg.get = function (key) {
+                if (key === 'ADS_BLOCKED' || key === 'adsBlocked') return false;
+                return get.call(this, key);
+              };
+            }
+          }
+        } catch (_) {}
+
+        // Fake the ad element check — YouTube queries for
+        // a specific element and checks if it's visible
+        try {
+          const origQSE = document.querySelector;
+          document.querySelector = function (selector) {
+            const result = origQSE.call(this, selector);
+            // If YouTube is checking for ad-related elements,
+            // return a fake visible element
+            if (typeof selector === 'string') {
+              if (selector.includes('.ytp-ad') || 
+                  selector.includes('video-ads') ||
+                  selector.includes('ad-showing')) {
+                // Return the real element if it exists,
+                // otherwise return a fake one
+                if (result) return result;
+                // Don't return fake — just return null
+                // (YouTube checks if result is null to detect blocking)
+              }
+              // Hide the adblocker popup
+              if (selector.includes('enforcement-message')) {
+                return null;
+              }
+            }
+            return result;
+          };
+        } catch (_) {}
+      };
+
+      // 5) Override ytInitialPlayerResponse to remove ad data
+      //    that YouTube uses for detection
+      const patchYTPlayerResponse = () => {
+        try {
+          if (window.ytInitialPlayerResponse) {
+            // Keep ad info intact (YouTube needs it to not
+            // detect blocking), but we'll hide visuals
+            // The key is to NOT remove adSpec — just let it be
+          }
+        } catch (_) {};
+      };
+
+      // Run all YouTube patches
+      patchYTDetection();
+      patchYTPlayerResponse();
+      removeYTAdPopup();
+      fakeYTAdContainers();
+      hideYTSidebarAds();
+
+      // Repeatedly clean up (YouTube re-renders constantly)
+      setInterval(removeYTAdPopup, 500);
+      setInterval(fakeYTAdContainers, 1000);
+      setInterval(hideYTSidebarAds, 2000);
+
+      // Watch for navigation (YouTube is SPA)
+      const ytObserver = new MutationObserver(() => {
+        removeYTAdPopup();
+        fakeYTAdContainers();
+        hideYTSidebarAds();
+      });
+      ytObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
     }
 
     // --- facebook.com / m.facebook.com specific bypasses ---
