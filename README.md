@@ -16,9 +16,6 @@
   <img src="https://img.shields.io/badge/No%20Tracking-✅-red?style=for-the-badge" alt="No Tracking" />
 </p>
 
-<p align="center">
-  Made by <a href="https://github.com/Irnhakim"><strong>@Irnhakim</strong></a>
-</p>
 
 ---
 
