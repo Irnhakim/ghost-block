@@ -13,11 +13,13 @@ function render(status) {
   if (enabled) {
     toggleBtn.classList.add("active");
     statusDot.classList.add("active");
-    statusText.textContent = "Protection active";
+    statusText.classList.add("on");
+    statusText.textContent = "ON";
   } else {
     toggleBtn.classList.remove("active");
     statusDot.classList.remove("active");
-    statusText.textContent = "Protection paused";
+    statusText.classList.remove("on");
+    statusText.textContent = "OFF";
   }
 
   todayCount.textContent = formatNum(blockedStats.today);

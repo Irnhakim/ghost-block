@@ -8,182 +8,275 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      width: 320px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      padding: 20px;
+      width: 300px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      background: #0a0a0a;
+      color: #e8e8e8;
+      padding: 0;
+      overflow: hidden;
     }
 
-    .header {
+    /* Top bar */
+    .topbar {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid #1e1e1e;
     }
 
-    .logo {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #7c3aed, #2563eb);
-      border-radius: 10px;
+    .brand {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 18px;
+      gap: 8px;
     }
 
-    .header h1 {
+    .ghost-icon {
       font-size: 16px;
-      font-weight: 600;
+      line-height: 1;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       color: #fff;
+      text-transform: uppercase;
     }
 
-    .header .version {
-      font-size: 11px;
-      color: #8b949e;
+    .version-tag {
+      font-size: 10px;
+      color: #3a3a3a;
+      letter-spacing: 0.04em;
     }
 
-    /* Toggle */
+    /* Main toggle section */
+    .main {
+      padding: 20px 16px 16px;
+    }
+
     .toggle-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
-    .toggle-label {
+    .status-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .status-label {
+      font-size: 11px;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .status-value {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 700;
+      color: #ff4444;
+      letter-spacing: 0.04em;
     }
 
+    .status-value.on {
+      color: #00e676;
+    }
+
+    /* Toggle switch */
     .toggle {
-      width: 44px;
-      height: 24px;
-      border-radius: 12px;
-      background: #30363d;
+      width: 48px;
+      height: 26px;
+      border-radius: 2px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
       cursor: pointer;
       position: relative;
-      transition: background 0.2s;
+      transition: background 0.15s, border-color 0.15s;
+      flex-shrink: 0;
     }
 
     .toggle.active {
-      background: #238636;
+      background: #00e676;
+      border-color: #00e676;
     }
 
     .toggle::after {
       content: '';
-      width: 18px;
+      width: 20px;
       height: 18px;
-      border-radius: 50%;
-      background: #fff;
+      border-radius: 1px;
+      background: #333;
       position: absolute;
       top: 3px;
       left: 3px;
-      transition: transform 0.2s;
+      transition: transform 0.15s, background 0.15s;
     }
 
     .toggle.active::after {
-      transform: translateX(20px);
+      transform: translateX(22px);
+      background: #0a0a0a;
     }
 
     /* Stats */
     .stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
     }
 
-    .stat-card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 14px;
-      text-align: center;
+    .stat {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 2px;
+      padding: 12px 14px;
     }
 
-    .stat-value {
-      font-size: 22px;
+    .stat-num {
+      font-size: 24px;
       font-weight: 700;
-      color: #58a6ff;
-      margin-bottom: 4px;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 5px;
     }
 
-    .stat-label {
-      font-size: 11px;
-      color: #8b949e;
+    .stat-desc {
+      font-size: 10px;
+      color: #3a3a3a;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.1em;
     }
 
-    /* Footer */
-    .footer {
-      text-align: center;
-      font-size: 11px;
-      color: #484f58;
-      margin-top: 8px;
-    }
-
-    /* Status indicator */
-    .status {
+    /* Bottom bar */
+    .bottombar {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 12px;
-      color: #8b949e;
-      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-top: 1px solid #1a1a1a;
+      margin-top: 4px;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
+    .dot {
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: #f85149;
+      background: #ff4444;
+      flex-shrink: 0;
     }
 
-    .status-dot.active {
-      background: #3fb950;
-      box-shadow: 0 0 6px rgba(63, 185, 80, 0.4);
+    .dot.active {
+      background: #00e676;
+      box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+    }
+
+    .tag {
+      font-size: 10px;
+      color: #2a2a2a;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Credit */
+    .credit {
+      border-top: 1px solid #141414;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .credit-author {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .credit-author a {
+      font-size: 11px;
+      color: #3a3a3a;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+
+    .credit-author a:hover { color: #888; }
+
+    .credit-label {
+      font-size: 10px;
+      color: #222;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .support-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .support-links a {
+      font-size: 10px;
+      color: #2a2a2a;
+      text-decoration: none;
+      border: 1px solid #1e1e1e;
+      border-radius: 2px;
+      padding: 3px 7px;
+      letter-spacing: 0.04em;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .support-links a:hover {
+      color: #00e676;
+      border-color: #00e676;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">👻</div>
-    <div>
-      <h1>GhostBlock</h1>
-      <div class="version">v1.0.0 · Invisible Ad Shield</div>
+  <div class="topbar">
+    <div class="brand">
+      <span class="ghost-icon">👻</span>
+      <span class="brand-name">GhostBlock</span>
+    </div>
+    <span class="version-tag">v1.0.0</span>
+  </div>
+
+  <div class="main">
+    <div class="toggle-row">
+      <div class="status-group">
+        <span class="status-label">Status</span>
+        <span class="status-value" id="statusText">OFF</span>
+      </div>
+      <div class="toggle" id="toggleBtn"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" id="todayCount">0</div>
+        <div class="stat-desc">Today</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="totalCount">0</div>
+        <div class="stat-desc">All Time</div>
+      </div>
     </div>
   </div>
 
-  <div class="status">
-    <div class="status-dot" id="statusDot"></div>
-    <span id="statusText">Checking...</span>
+  <div class="bottombar">
+    <div class="dot" id="statusDot"></div>
+    <span class="tag">Silent · Invisible · Undetectable</span>
   </div>
 
-  <div class="toggle-row">
-    <span class="toggle-label">Protection</span>
-    <div class="toggle" id="toggleBtn"></div>
-  </div>
-
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-value" id="todayCount">0</div>
-      <div class="stat-label">Blocked Today</div>
+  <div class="credit">
+    <div class="credit-author">
+      <span class="credit-label">by</span>
+      <a href="https://github.com/Irnhakim" target="_blank">@Irnhakim</a>
     </div>
-    <div class="stat-card">
-      <div class="stat-value" id="totalCount">0</div>
-      <div class="stat-label">Total Blocked</div>
+    <div class="support-links">
+      <a href="https://saweria.co/irnhakim" target="_blank">Saweria</a>
+      <a href="https://buymeacoffee.com/irnhakim" target="_blank">Buy Me a Coffee</a>
     </div>
-  </div>
-
-  <div class="footer">
-    🔇 Silent · Invisible · Undetectable
   </div>
 
   <script src="popup.js"></script>
