@@ -115,17 +115,19 @@
     const origFetch = window.fetch;
     window.fetch = function (input, init) {
       if (!enabled) return origFetch.call(this, input, init);
-      const url =
-        typeof input === "string"
-          ? input
-          : input && input.url
-          ? input.url
-          : "";
-      if (isAdURL(url)) {
-        return Promise.resolve(
-          new Response("", { status: 200, statusText: "OK" })
-        );
-      }
+      try {
+        const url =
+          typeof input === "string"
+            ? input
+            : input && input.url
+            ? String(input.url)
+            : "";
+        if (isAdURL(url)) {
+          return Promise.resolve(
+            new Response("", { status: 200, statusText: "OK" })
+          );
+        }
+      } catch (_) {}
       return origFetch.call(this, input, init);
     };
 
@@ -165,7 +167,11 @@
      ============================================================ */
   function isAdURL(url) {
     if (!url) return false;
-    const lower = url.toLowerCase();
+    // Ensure url is a string (might be Request, URL, or other object)
+    const urlStr = typeof url === "string" ? url
+      : (url && typeof url === "object" && url.url) ? String(url.url)
+      : String(url);
+    const lower = urlStr.toLowerCase();
 
     // IMPORTANT: Never block YouTube ad network requests!
     // YouTube detects if ad requests are blocked and shows
@@ -672,15 +678,25 @@
       setInterval(hideYTSidebarAds, 2000);
 
       // Watch for navigation (YouTube is SPA)
-      const ytObserver = new MutationObserver(() => {
-        removeYTAdPopup();
-        fakeYTAdContainers();
-        hideYTSidebarAds();
-      });
-      ytObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
+      // Wait for body to be available (script runs at document_start)
+      const startYTObserving = () => {
+        if (!document.body) {
+          setTimeout(startYTObserving, 100);
+          return;
+        }
+        try {
+          const ytObserver = new MutationObserver(() => {
+            removeYTAdPopup();
+            fakeYTAdContainers();
+            hideYTSidebarAds();
+          });
+          ytObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+          });
+        } catch (_) {}
+      };
+      startYTObserving();
     }
 
     // --- facebook.com / m.facebook.com specific bypasses ---
@@ -825,10 +841,12 @@
 
       // 5) Also remove on scroll (new feed items load)
       let scrollTimeout;
-      window.addEventListener("scroll", () => {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(removeFbAds, 200);
-      }, { passive: true });
+      try {
+        window.addEventListener("scroll", () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(removeFbAds, 200);
+        }, { passive: true });
+      } catch (_) {}
     }
   }
 
