@@ -89,3 +89,59 @@ script[src*="wpadmngr"],
   pointer-events: none !important;
   opacity: 0 !important;
 }
+
+/* === OtakuDesu specific === */
+
+/* Banner ads (betting/gambling banners) */
+.iklan,
+.iklan a,
+.iklan img,
+
+/* Fixed bottom sticky ad */
+#iklanbawah,
+#iklanbawah div,
+#iklanbawah img,
+.bloxkln,
+.bloxkln a,
+.bloxkln img,
+
+/* Popup ad */
+.box_item_ads_popup,
+.box_item_ads_popup img,
+.box_item_ads_popup .close-button,
+
+/* Ad containers */
+.box_item_ads,
+.box_item_ads .ads-460,
+.box_item_ads .ads-720,
+
+/* Ad section wrapper */
+#venads,
+
+/* Header ad */
+.ads,
+.ads img,
+
+/* Dark overlay ad */
+#lightsoff,
+
+/* Banner containers */
+.banners,
+.banners img,
+
+/* Ad script element */
+script[src*="ads.desustream"],
+script[src*="desustream.com"],
+
+/* Tolstoy comments (ad vector) */
+#otakudesu-comments,
+.tolstoycomments-feed,
+script[src*="tolstoycomments"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}

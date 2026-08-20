@@ -125,7 +125,15 @@ const DEFAULT_AD_HOSTS = [
   "js.wpadmngr.com",
 
   // Bot detection (anti-adblock)
-  "botradar.tech"
+  "botradar.tech",
+
+  // OtakuDesu specific
+  "ads.desustream.com",
+  "desustream.com",
+  "rebrand.ly",
+
+  // Tolstoy Comments (used as ad vector)
+  "web.tolstoycomments.com"
 ];
 
 /* ============================================================

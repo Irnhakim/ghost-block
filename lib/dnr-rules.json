@@ -412,5 +412,41 @@
       "urlFilter": "mediapays.info",
       "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
     }
+  },
+  {
+    "id": 60,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "ads.desustream.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 61,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "rebrand.ly",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 62,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "desustream.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
+  },
+  {
+    "id": 63,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "web.tolstoycomments.com",
+      "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "font", "other"]
+    }
   }
 ]

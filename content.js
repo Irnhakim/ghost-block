@@ -380,6 +380,103 @@
         return result;
       };
     }
+
+    // --- otakudesu.blog specific bypasses ---
+    if (hostname.includes("otakudesu.blog") || hostname.includes("otakudesu.io")) {
+      // 1) Remove fixed bottom ad (#iklanbawah) after page load
+      //    The site uses a jQuery close button, but we remove it entirely
+      const removeBottomAd = () => {
+        const el = document.getElementById("iklanbawah");
+        if (el) {
+          el.__GB_AD__ = true;
+          el.style.setProperty("display", "none", "important");
+          el.style.setProperty("visibility", "hidden", "important");
+          try { el.parentNode.removeChild(el); } catch (_) {}
+        }
+        // Also remove .box_item_ads_popup
+        document.querySelectorAll(".box_item_ads_popup").forEach((el) => {
+          markAndRemove(el);
+        });
+        // Remove .iklan banner ads
+        document.querySelectorAll(".iklan").forEach((el) => {
+          markAndRemove(el);
+        });
+        // Remove #venads section
+        document.querySelectorAll("#venads").forEach((el) => {
+          markAndRemove(el);
+        });
+        // Remove #lightsoff overlay
+        document.querySelectorAll("#lightsoff").forEach((el) => {
+          markAndRemove(el);
+        });
+      };
+
+      // Run immediately and after delay
+      removeBottomAd();
+      setTimeout(removeBottomAd, 500);
+      setTimeout(removeBottomAd, 1500);
+      setTimeout(removeBottomAd, 3000);
+
+      // 2) Block the ads.desustream.com script from loading
+      //    by spoofing the script element's src property
+      const origCreateEl = document.createElement;
+      document.createElement = function (tag) {
+        const el = origCreateEl.call(document, tag);
+        if (tag.toLowerCase() === "script") {
+          const origSrcDesc = Object.getOwnPropertyDescriptor(
+            HTMLScriptElement.prototype, "src"
+          );
+          if (origSrcDesc) {
+            Object.defineProperty(el, "src", {
+              get() { return origSrcDesc.get.call(this); },
+              set(val) {
+                if (val && (
+                  val.includes("desustream") ||
+                  val.includes("tolstoycomments")
+                )) {
+                  // Block the ad script
+                  return;
+                }
+                return origSrcDesc.set.call(this, val);
+              },
+              configurable: true
+            });
+          }
+        };
+        return el;
+      };
+
+      // 3) Override jQuery ready to prevent ad initialization
+      //    The site uses jQuery to initialize ads on document.ready
+      if (window.jQuery) {
+        const origReady = window.jQuery.fn.ready;
+        if (origReady) {
+          window.jQuery.fn.ready = function (fn) {
+            // Wrap to run our cleanup after jQuery ready
+            return origReady.call(this, function () {
+              fn.call(this);
+              // Clean up ads after jQuery initializes them
+              setTimeout(removeBottomAd, 100);
+              setTimeout(removeBottomAd, 500);
+            });
+          };
+        }
+      }
+
+      // 4) Block the counter_tampilan ad timer
+      //    The site uses setInterval for a 6-second ad display timer
+      const origSetInterval = window.setInterval;
+      window.setInterval = function (fn, delay) {
+        const fnStr = fn.toString();
+        if (fnStr.includes("counter_tampilan") || 
+            fnStr.includes("auto_close_tampilan") ||
+            fnStr.includes("iklanbawah")) {
+          // Block ad-related intervals
+          return 0;
+        }
+        return origSetInterval.call(this, fn, delay);
+      };
+    }
   }
 
   /* ============================================================
