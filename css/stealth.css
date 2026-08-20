@@ -1,0 +1,65 @@
+/* GhostBlock — Stealth CSS
+ * Immediately hide known ad containers before page renders.
+ * Uses !important to beat site styles, and is applied at
+ * document_start so there's no flash of ad content.
+ */
+iframe[src*="doubleclick"],
+iframe[src*="googlesyndication"],
+iframe[src*="google_ads"],
+iframe[id*="google_ads"],
+iframe[name*="google_ads"],
+iframe[src*="adnxs"],
+iframe[src*="amazon-adsystem"],
+iframe[src*="criteo"],
+iframe[src*="pubmatic"],
+iframe[src*="openx.net"],
+iframe[src*="rubiconproject"],
+iframe[src*="taboola"],
+iframe[src*="outbrain"],
+iframe[src*="moatads"],
+iframe[src*="media.net"],
+iframe[src*="scorecardresearch"],
+iframe[src*="demdex"],
+iframe[src*="hotjar"],
+iframe[src*="popads"],
+iframe[src*="propellerads"],
+iframe[src*="exoclick"],
+iframe[src*="teads"],
+iframe[src*="sharethrough"],
+iframe[src*="casalemedia"],
+iframe[src*="mookie1"],
+iframe[src*="bidswitch"],
+iframe[src*="rlcdn"],
+iframe[src*="turn.com"],
+iframe[src*="indexww"],
+iframe[src*="coinhive"],
+iframe[src*="adskeeper"],
+iframe[src*="popcash"],
+iframe[src*="adsrvr"],
+iframe[src*="doubleclick.net/ad"],
+div[id*="div-gpt-ad"],
+div[id*="google_ads"],
+div[class*="adsbygoogle"],
+div[class*="ad-banner"],
+div[class*="ad-container"],
+div[class*="ad-wrapper"],
+div[class*="ad-slot"],
+div[class*="ad-unit"],
+div[class*="ad-block"],
+div[data-ad-slot],
+div[data-adunit],
+div[data-adunitid],
+div[class*="taboola"],
+div[class*="outbrain"],
+div[class*="sponsored"],
+div[class*="promoted"],
+span[id*="google_ads"],
+ins.adsbygoogle {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
